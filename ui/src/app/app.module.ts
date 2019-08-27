@@ -6,14 +6,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AppComponent } from './app.component';
 import { ProjectAddComponent } from './project/project-add/project-add.component';
-import { ProjectEditComponent } from './project/project-edit/project-edit.component';
-import { ProjectViewComponent } from './project/project-view/project-view.component';
 import { TaskAddComponent } from './task/task-add/task-add.component';
-import { TaskEditComponent } from './task/task-edit/task-edit.component';
 import { TaskViewComponent } from './task/task-view/task-view.component';
 import { UserAddComponent } from './user/user-add/user-add.component';
-import { UserEditComponent } from './user/user-edit/user-edit.component';
-import { UserViewComponent } from './user/user-view/user-view.component';
 import { TaskService } from './services/task.service';
 import { ParentTaskService } from './services/parenttask.service';
 import { ProjectService } from './services/project.service';
@@ -26,7 +21,7 @@ import { ProjectSortPipe } from './pipes/projectsort.pipe';
 import { TaskSortPipe } from './pipes/tasksort.pipe';
 
 const routes : Routes = [
-  { path: '', redirectTo: '/viewTask', pathMatch: 'full' },
+  { path: '', redirectTo: '/addUser', pathMatch: 'full' },
   { path: 'viewTask', component: TaskViewComponent},
   { path: 'addTask', component: TaskAddComponent},
   { path: 'addTask/:id', component: TaskAddComponent},
@@ -40,14 +35,9 @@ const routes : Routes = [
   declarations: [
     AppComponent,
     ProjectAddComponent,
-    ProjectEditComponent,
-    ProjectViewComponent,
     TaskAddComponent,
-    TaskEditComponent,
     TaskViewComponent,
     UserAddComponent,
-    UserEditComponent,
-    UserViewComponent,
     ProjectPipe,
     UserPipe,
     TaskPipe,

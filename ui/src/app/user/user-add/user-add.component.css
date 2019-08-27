@@ -1,0 +1,13 @@
+.container {
+  width: 1200px;
+  margin: auto;
+  border: 3px;
+  }
+
+td {
+    border-top: none;
+}
+
+button {
+    width: 120px;
+}

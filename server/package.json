@@ -1,0 +1,19 @@
+{
+  "name": "projmgmtserver",
+  "version": "1.0.0",
+  "description": "server backend for project management app",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "assert": "^2.0.0",
+    "express": "^4.17.1",
+    "mongodb": "^3.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
+}

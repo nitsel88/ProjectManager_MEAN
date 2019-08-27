@@ -20,26 +20,28 @@ export class UserAddComponent implements OnInit {
   constructor(private userService : UserService, private route : ActivatedRoute) { }
 
   ngOnInit() {
-    this.fetchUsers();
+    this.getAllUsers();
     this.myForm = new FormGroup({
       'userGroup': new FormGroup({
-          'firstName': new FormControl('', [Validators.required], []),
-          'lastName': new FormControl('', Validators.required),
-          'empId': new FormControl('', Validators.required)
+          'firstName': new FormControl('', [Validators.required]),
+          'lastName': new FormControl('', [Validators.required]),
+          'empId': new FormControl('',[Validators.required])
       })
   })
-  const id = +this.route.snapshot.paramMap.get('id');
-    console.log(id);
-    if(+id > 0){
-        this.id = +id;
-        this.getUser(this.id);
+    this.route.params.subscribe(params => {
+    let empId = +params['id'];
+    console.log(empId);
+    if(empId){        
+        this.getUser(empId);
         this.btnType = "Update";
     } else {
         this.btnType = "Add";
     }
+  
+    })
   }
 
-  fetchUsers() {
+  getAllUsers() {
     this.userService.fetchUsers()
     .then((res) => {
       console.log(res);
@@ -47,14 +49,15 @@ export class UserAddComponent implements OnInit {
     })
   }
 
-  getUser(userId) {
-    this.userService.getUser(userId)
+  getUser(empId) {
+    this.userService.getUser(empId)
     .then((res) => {
       console.log(res);
       this.user = res;
-      this.myForm.controls['userGroup']['controls'].firstName.setValue(this.user["firstName"]);
-      this.myForm.controls['userGroup']['controls'].lastName.setValue(this.user["lastName"]);
-      this.myForm.controls['userGroup']['controls'].empId.setValue(this.user["empId"]);
+      this.id = this.user[0]._id
+      this.myForm.controls['userGroup']['controls'].firstName.setValue(this.user[0].firstName);
+      this.myForm.controls['userGroup']['controls'].lastName.setValue(this.user[0].lastName);
+      this.myForm.controls['userGroup']['controls'].empId.setValue(this.user[0].empId);
     })
   }
 
@@ -62,14 +65,14 @@ export class UserAddComponent implements OnInit {
     this.user = {"firstName":this.myForm.value.userGroup.firstName,
     "lastName":this.myForm.value.userGroup.lastName,
     "empId":this.myForm.value.userGroup.empId}
-    if(this.id > 0) {
-      this.userService.updateUser(JSON.stringify(this.user), this.id)
+    if(this.id) {
+      this.userService.updateUser(this.user)
           .then(res => {
               console.log(res);
               if (res.userId > 0) {
-                this.status = "User Updated Successfully!"
+                this.status = "User Updated !!"
                 this.myForm.reset();
-                this.fetchUsers();
+                this.getAllUsers();
               }
           }, err => {
               console.log('server err');
@@ -80,13 +83,13 @@ export class UserAddComponent implements OnInit {
               console.log(err);
           })
     } else {
-        this.userService.addUser(JSON.stringify(this.user))
+        this.userService.addUser(this.user)
         .then(res => {
             console.log(res);
             if (res.userId > 0) {
-              this.status = "User Added Successfully!"
+              this.status = "User Added !!"
               this.myForm.reset();
-              this.fetchUsers();
+              this.getAllUsers();
             }
         }, err => {
             console.log('server err');
@@ -104,9 +107,9 @@ export class UserAddComponent implements OnInit {
     .then((res) => {
       console.log(res);
       if(res == 200) {
-       this.status = "User Deleted Successfully!";
+       this.status = "User Deleted !!";
       }
-      this.fetchUsers();
+      this.getAllUsers();
     })
   }
   sortBy(prop) {
