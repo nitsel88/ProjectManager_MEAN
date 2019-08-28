@@ -112,7 +112,7 @@ export class ProjectAddComponent implements OnInit {
             .then(res => {
                 console.log(res);
                 if (res.projectId > 0) {
-                  this.status = "Project Added Successfully!"
+                  this.status = "Project Added !!"
                   this.myForm.reset();
                   this.fetchProjects();
                 }
