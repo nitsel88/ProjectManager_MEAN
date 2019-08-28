@@ -1,15 +1,11 @@
 <div class="container">
-    <span class="h4 text-success">{{status}}</span>
-    <span class="h4 text-danger">{{error}}</span>
-  </div>
-  <form [formGroup]="myForm" (submit)="onSubmit()">
+  <form [formGroup]="myForm" (submit)="onSubmit()"  ngNativeValidate>
   <div formGroupName="projectGroup">
       <div class="form-group row">
           <label for="project" class="col-sm-2 col-form-label"><b>Project:</b></label>
           <div class="col-sm-3">
           <input type="text" class="form-control" id="project" name="project" formControlName="project">
-          <small class="text-danger" *ngIf="!myForm.controls['projectGroup']['controls'].project.valid && myForm.controls['projectGroup']['controls'].project.touched">Project required!!</small>
-        </div>
+   </div>
       </div>
       <div class="form-group row">
           <div class="col-sm-6">
@@ -30,22 +26,24 @@
           <span class="font-weight-bold blue-text mr-0 mt-0">0</span>
           <div class="col-sm-3">
           <input type="range" class="custom-range" min="0" max="30" step="1" id="priority" name="priority" formControlName="priority">
-          <small class="text-danger" *ngIf="!myForm.controls['projectGroup']['controls'].priority.valid && myForm.controls['projectGroup']['controls'].priority.touched">Priority required!!</small>
         </div>
         <span class="font-weight-bold blue-text ml-0 mt-0">30</span>
       </div>
       <div class="form-group row">
           <label for="user" class="col-sm-2 col-form-label"><b>Manager:</b></label>
           <div class="col-sm-3">
-          <input type="text" class="form-control" [(ngModel)]="user.firstName" readonly id="user" name="user" formControlName="user">
-          <small class="text-danger" *ngIf="!myForm.controls['projectGroup']['controls'].user.valid && myForm.controls['projectGroup']['controls'].user.touched">User required!!</small>
-        </div>
+          <input type="text" class="form-control" readonly id="user" name="user" formControlName="user">
+    </div>
         <div class="col-50"><button type="button" class="btn btn-primary  mr-3" data-toggle="modal" data-target="#userModal" (click)="getUsers()">Search</button></div>
       </div>
       <div class="form-group row">
-          <div class="col-7">
-          <button type="submit" class="btn btn-primary  mr-3">{{btnType}}</button>
+          <div class="col-10">
+          <button type="submit" class="btn btn-primary  mr-3"  [disabled]="!myForm.valid">{{btnType}}</button>
           <button type="button" class="btn btn-primary" (click)="resetForm()">Reset</button>
+          </div>
+          <div class="col-3">
+           <span class="text-success">{{status}}</span>
+           <span class="text-danger">{{error}}</span>
           </div>
       </div>
   </div>
@@ -57,7 +55,7 @@
         <input type="text" #project (keyup)="0" class="form-control" id="search" name="search">
       </div>
       <label class="col-form-label"><b>Sort By:</b></label>
-      <div class="col-sm-5">
+      <div class="col-sm-6">
           <button type="button" (click) = "sortBy('projectStartDate')" class="btn btn-primary  mr-3">Start Date</button>
           <button type="button" (click) = "sortBy('projectEndDate')" class="btn btn-primary  mr-3">End Date</button>
           <button type="button" (click) = "sortBy('projectPriority')" class="btn btn-primary  mr-3">Priority</button>
@@ -92,6 +90,7 @@
           <div class="col-1"><button type="button" class="btn btn-danger" (click)="deleteProject(project.projectId)">Suspend
             </button></div>
         </div>
+    </div>
 <!-- User Modal -->
 <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -104,7 +103,7 @@
         </div>
         <div class="modal-body">
             <div class="list-group" *ngFor="let user of users">
-                <li class="list-group-item list-group-item-action" (click)="selectedUser(user.userId)">
+                <li class="list-group-item list-group-item-action" (click)="selectedUser(user.empId)">
                   {{user.firstName}}
                 </li>
             </div>

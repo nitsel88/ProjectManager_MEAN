@@ -66,6 +66,7 @@ export class UserAddComponent implements OnInit {
     "lastName":this.myForm.value.userGroup.lastName,
     "empId":this.myForm.value.userGroup.empId}
     if(this.id) {
+      this.user["_id"] = this.id
       this.userService.updateUser(this.user)
           .then(res => {
               console.log(res);
@@ -117,5 +118,6 @@ export class UserAddComponent implements OnInit {
   }
   resetForm() {
     this.myForm.reset();
+    this.btnType = "Add";
   }
 }

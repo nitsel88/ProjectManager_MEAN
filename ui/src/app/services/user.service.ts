@@ -42,6 +42,9 @@ export class UserService {
     updateUser(user): Promise<any> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
+
+        console.log("update user request to service")
+        console.log(user)
         return this.http.put(this.server, user, options)
             .toPromise()
             .then(response => {

@@ -1,4 +1,5 @@
 var users = require('./users')
+var projects = require('./projects')
 const dbObj = require('./database')
 var express = require('express')
 var app = express()
@@ -18,6 +19,7 @@ app.use(function(req, res, next) {
 
 //routing
 app.use("/user", users);
+app.use("/project", projects);
 
 try {
 //initializing DB and start listening to port

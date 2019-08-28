@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ViewChild, ElementRef} from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef} from '@angular/core';
+import { FormGroup, FormControl, Validators,  } from '@angular/forms';
 import { ProjectService } from 'src/app/services/project.service';
 import { UserService } from 'src/app/services/user.service';
 import { ActivatedRoute } from '@angular/router';
@@ -11,8 +10,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./project-add.component.css']
 })
 export class ProjectAddComponent implements OnInit {
-
-  @ViewChild('closeUserModal') closeUserModal: ElementRef;
+  @ViewChild('closeUserModal') closeUserModal: ElementRef<any>;
   status : string = ""
   error : string = ""
   myForm : FormGroup
@@ -30,7 +28,7 @@ export class ProjectAddComponent implements OnInit {
   ngOnInit() {
     this.myForm = new FormGroup({
       'projectGroup': new FormGroup({
-          'project': new FormControl('', [Validators.required], []),
+          'project': new FormControl('', Validators.required),
           'priority': new FormControl('', Validators.required),
           'user': new FormControl('', Validators.required),
           'startDate': new FormControl('', Validators.required),
@@ -69,7 +67,7 @@ export class ProjectAddComponent implements OnInit {
     this.projectService.fetchProjects()
     .then((res) => {
       console.log(res);
-      this.projects = res;
+      //this.projects = res;
     })
   }
   currentDate() {
@@ -93,7 +91,7 @@ export class ProjectAddComponent implements OnInit {
         "priority":this.myForm.value.projectGroup.priority, 
         "managerId":this.user.userId}
         if(this.id > 0) {
-          this.projectService.updateProject(JSON.stringify(this.project), this.id)
+          this.projectService.updateProject(this.project, this.id)
               .then(res => {
                   console.log(res);
                   if (res.projectId > 0) {
@@ -110,7 +108,7 @@ export class ProjectAddComponent implements OnInit {
                   console.log(err);
               })
         } else {
-            this.projectService.addProject(JSON.stringify(this.project))
+            this.projectService.addProject(this.project)
             .then(res => {
                 console.log(res);
                 if (res.projectId > 0) {
@@ -153,7 +151,8 @@ export class ProjectAddComponent implements OnInit {
     this.userService.getUser(userId)
     .then((res) => {
       console.log(res);
-      this.user = res;
+      this.user = res[0];
+      this.myForm.controls['projectGroup']['controls'].user.setValue( this.user.firstName);
     })
     this.closeUserModal.nativeElement.click();
   }
@@ -162,7 +161,7 @@ export class ProjectAddComponent implements OnInit {
     this.userService.getUser(userId)
     .then((res) => {
       console.log(res);
-      this.user = res;
+      this.user = res[0];
     })
   }
 

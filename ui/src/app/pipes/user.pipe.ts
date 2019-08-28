@@ -14,7 +14,7 @@ export class UserPipe implements PipeTransform {
 
         if(firstName.trim() != '') {
             let filteredUsers = value.filter(val => {
-                return val.firstName.includes(firstName)
+                return val.firstName.toUpperCase().includes(firstName.toUpperCase())
             });
             return filteredUsers
         } 
