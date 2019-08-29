@@ -19,6 +19,7 @@ export class TaskViewComponent implements OnInit {
   projects : Array<any> = [];
   project : any = {}
   property : ""
+  parentTask: string = "No Parent Task"
   endDate: string = formatDate(new Date(), 'yyyy-MM-dd', 'en');
 
   constructor(private projectService : ProjectService, private taskService : TaskService) { }

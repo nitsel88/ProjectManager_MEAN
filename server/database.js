@@ -156,14 +156,27 @@ function getProjects (id) {
   } else {
      queryString = {}
   }
-  db.collection("projects").find(queryString).toArray(function(err, projects) {
+  db.collection("projects").find(queryString).toArray((err, projects)=>{
     if (err) { 
       reject (err)
     }
   console.log("Found the following projects");
   console.log(projects)
-
-  resolve(projects);
+  if (id) {
+    db.collection("tasks").find({projectId: parseInt(id)}).toArray((err, tasks)=> {
+       if (err) {
+         reject (err)
+       }
+       console.log("Found the following tasks for project id: " + id);
+       console.log(tasks)
+       projects[0].tasks = tasks
+       console.log(JSON.stringify(projects))
+       
+       resolve(projects)
+    })
+  } else {
+    resolve(projects)
+  }  
   });
  })
 }
