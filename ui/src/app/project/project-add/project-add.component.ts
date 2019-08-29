@@ -38,22 +38,24 @@ export class ProjectAddComponent implements OnInit {
   this.myForm.controls['projectGroup']['controls'].startDate.setValue(this.currentDate());
   this.myForm.controls['projectGroup']['controls'].endDate.setValue(this.endDate());
   this.fetchProjects();
-  const id = +this.route.snapshot.paramMap.get('id');
-    console.log(id);
-    if(+id > 0){
-        this.id = +id;
-        this.getProject(this.id);
+
+  this.route.params.subscribe(params => {
+    let empId = +params['id'];
+    if(+empId > 0){
+        this.id = +empId;
+        this.populateProject(this.id);
         this.btnType = "Update";
     } else {
         this.btnType = "Add";
     }
+  })
   }
   
-  getProject(projectId) {
+  populateProject(projectId) {
     this.projectService.getProject(projectId)
     .then((res) => {
       console.log(res);
-      this.project = res;
+      this.project = res[0];
       this.myForm.controls['projectGroup']['controls'].project.setValue(this.project["project"]);
       this.myForm.controls['projectGroup']['controls'].priority.setValue(this.project["priority"]);
       this.myForm.controls['projectGroup']['controls'].user.setValue(this.project["managerName"]);
@@ -67,7 +69,7 @@ export class ProjectAddComponent implements OnInit {
     this.projectService.fetchProjects()
     .then((res) => {
       console.log(res);
-      //this.projects = res;
+      this.projects = res;
     })
   }
   currentDate() {
@@ -85,13 +87,14 @@ export class ProjectAddComponent implements OnInit {
   onSubmit() {
     let dateCheck = this.validateDate(this.myForm.value.projectGroup.startDate, this.myForm.value.projectGroup.endDate);
     if(!dateCheck) {
-      this.project = {"project":this.myForm.value.projectGroup.project,
-        "startDate":this.myForm.value.projectGroup.startDate,
-        "endDate":this.myForm.value.projectGroup.endDate,
-        "priority":this.myForm.value.projectGroup.priority, 
-        "managerId":this.user.userId}
+         this.project.project = this.myForm.value.projectGroup.project;
+         this.project.startDate = this.myForm.value.projectGroup.startDate;
+         this.project.endDate = this.myForm.value.projectGroup.endDate;
+         this.project.priority = this.myForm.value.projectGroup.priority;
+         this.project.managerId = this.user.empId;
+
         if(this.id > 0) {
-          this.projectService.updateProject(this.project, this.id)
+          this.projectService.updateProject(this.project)
               .then(res => {
                   console.log(res);
                   if (res.projectId > 0) {
@@ -162,6 +165,7 @@ export class ProjectAddComponent implements OnInit {
     .then((res) => {
       console.log(res);
       this.user = res[0];
+      this.myForm.controls['projectGroup']['controls'].user.setValue(this.user.firstName);
     })
   }
 
@@ -169,8 +173,8 @@ export class ProjectAddComponent implements OnInit {
     this.projectService.deleteProject(projectId)
     .then((res) => {
       console.log(res);
-      if(res == 200) {
-       this.status = "Project Suspended Successfully!";
+      if(res.projectId == projectId) {
+         this.status = "Project Suspended Successfully!";
       }
       this.fetchProjects();
     })

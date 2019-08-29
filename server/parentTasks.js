@@ -4,41 +4,30 @@ const dbObj = require('./database')
 
 
 router.get('/', (req, res) => {
- //Get all Projects  
-   dbObj.getProjects().then((projects)=> {
-    res.json(projects)
+ //Get all parent tasks  
+   dbObj.getParentTasks().then((parentTasks)=> {
+    res.json(parentTasks)
    }).catch((err)=> {
     errobj = {errcode: 500, error: err}
     res.json(errobj)
    })
 })
 
-//get project for id
+//get parent task for id
 router.get('/:id', (req, res) => {
  //Get all Projects  
-   dbObj.getProjects(req.params.id).then((projects)=> {
-    res.json(projects)
+   dbObj.getParentTasks(req.params.id).then((parentTask)=> {
+    res.json(parentTask)
    }).catch((err)=> {
     errobj = {errcode: 500, error: err}
     res.json(errobj)
    })
 })
 
-//update project
-router.put('/', (req, res) => {   
-   dbObj.updateProject(req.body).then((dbres) => {
-       console.log(dbres)
-       res.json(dbres)
-   }).catch ((err) => {
-       errobj = {errcode: 500, error: err}
-       res.json(errobj)
-   })
-})
 
-
-//Create new Project
+//Create new parent task
 router.post('/', (req, res) => {   
-   dbObj.insertProject(req.body).then((dbres) => {
+   dbObj.insertParentTask(req.body).then((dbres) => {
        console.log(dbres)
        res.json(dbres)
    }).catch ((err) => {
@@ -48,9 +37,9 @@ router.post('/', (req, res) => {
    })
 })
 
-//delete project
+//delete parent task
 router.delete('/:id', (req, res) => {   
-   dbObj.deleteProject(req.params.id).then((dbres) => {
+   dbObj.deleteParentTask(req.params.id).then((dbres) => {
        console.log(dbres)
        res.json(dbres)
    }).catch ((err) => {

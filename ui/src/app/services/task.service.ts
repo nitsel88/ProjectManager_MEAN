@@ -7,11 +7,11 @@ import { Http, Headers, RequestOptions } from '@angular/http';
 export class TaskService {
 
   tasks: string[] = [];
-    private server: string = `http://localhost:8090/task`;
+    private server: string = `http://localhost:3001/task`;
     constructor(private http : Http) {}
 
     fetchTasks(): Promise<any> {
-        return this.http.get(`${this.server}/fetchTasks`)
+        return this.http.get(this.server)
             .toPromise()
             .then(response => {
                 return response.json();
@@ -20,7 +20,7 @@ export class TaskService {
     }
 
     getTask(taskId : number): Promise<any> {
-        return this.http.get(`${this.server}/getTask/${taskId}`)
+        return this.http.get(`${this.server}/${taskId}`)
             .toPromise()
             .then(response => {
                 return response.json();
@@ -28,10 +28,10 @@ export class TaskService {
             .catch(err => err);
     }
 
-    addTask(task: string): Promise<any> {
+    addTask(task): Promise<any> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-      return this.http.post(`${this.server}/saveTask`, task, options)
+      return this.http.post(this.server, task, options)
           .toPromise()
           .then(response => {
               return response.json();
@@ -39,10 +39,10 @@ export class TaskService {
           .catch(err => err);
     }
 
-    updateTask(task: string, id : number): Promise<any> {
+    updateTask(task): Promise<any> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        return this.http.put(`${this.server}/updateTask/${id}`, task, options)
+        return this.http.put(this.server, task, options)
             .toPromise()
             .then(response => {
                 return response.json();

@@ -24,7 +24,6 @@ export class TaskViewComponent implements OnInit {
   constructor(private projectService : ProjectService, private taskService : TaskService) { }
 
   ngOnInit() {
-    //this.tasks = [{"parentTask":"Parent task 1","newTask":{"taskName":"Task 1","startDate":"2019-03-18","endDate":"2019-04-18","priority":11}}];
   }
 
   isEnded(date) {
@@ -47,7 +46,7 @@ export class TaskViewComponent implements OnInit {
     this.projectService.getProject(projectId)
     .then((res) => {
       console.log(res);
-      this.project = res;
+      this.project = res[0];
     })
     this.closeModal.nativeElement.click();
   }
@@ -61,7 +60,7 @@ export class TaskViewComponent implements OnInit {
       if(this.project.tasks[val].taskId == id) {
         this.project.tasks[val].endDate = formatDate(new Date(), 'yyyy-MM-dd', 'en');
         this.project.tasks[val].status = "Completed";
-        this.taskService.updateTask(JSON.stringify(this.project.tasks[val]), id)
+        this.taskService.updateTask(this.project.tasks[val])
         .then(res => {
             console.log(res);
             if (res.taskId > 0) {

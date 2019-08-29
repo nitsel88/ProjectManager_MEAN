@@ -109,6 +109,7 @@ function deleteUser(id) {
   })
 }
 
+//get maximum project id
 function getMaxProjId() { 
      return new Promise((resolve, reject)=> { 
      db = getDb() 
@@ -116,8 +117,12 @@ function getMaxProjId() {
           if (err) {
             reject (err)
           }
-          console.log("max project id:" + maxproj[0].projectId)
-          resolve(maxproj[0].projectId)
+          
+          if (0 < maxproj.length) {
+             resolve(maxproj[0].projectId)
+          } else {
+             resolve (0)
+          }
        })   
      })     
     }
@@ -147,7 +152,7 @@ function getProjects (id) {
   return new Promise((resolve, reject)=> {
   db = getDb()
   if (id) {
-    queryString = {projId: id}
+    queryString = {projectId: parseInt(id)}
   } else {
      queryString = {}
   }
@@ -163,6 +168,163 @@ function getProjects (id) {
  })
 }
 
+//update project
+function updateProject (proj) {
+    return new Promise((resolve, reject)=> {
+    db = getDb()
+
+    console.log("update request received:"+ JSON.stringify(proj))
+    let _id = proj._id;
+    delete proj._id;     
+    db.collection("projects").updateOne({"_id": ObjectID(_id)}, {$set: proj}).then(result => {
+      const { matchedCount, modifiedCount } = result;
+      if(matchedCount && modifiedCount) {
+          console.log("project updated: " + proj.projectId);
+          resolve({projectId: proj.projectId })
+       } 
+     }).catch(err => {
+         reject (err)
+     })
+  })
+}
+
+//delete project
+function deleteProject(id) {
+    return new Promise((resolve, reject)=> {
+    db = getDb()
+    const query = {projectId: parseInt(id)}
+    db.collection("projects").deleteOne(query, function(err, res) {
+    if (err) { 
+      reject (err)
+    }
+    console.log("Project with id:"+ id + "deleted");
+    resolve({projectId: id }) 
+    })
+  })
+}
+
+
+//get maximum Parent task id
+function getmaxParentTaskId() { 
+     return new Promise((resolve, reject)=> { 
+     db = getDb() 
+       db.collection("parentTasks").find({}).sort({ "parentId": -1 }).limit(1).toArray(function(err, maxParent) {
+          if (err) {
+            reject (err)
+          }
+          
+          if (0 < maxParent.length) {
+             resolve(maxParent[0].parentId)
+          } else {
+             resolve (0)
+          }
+       })   
+     })     
+    }
+//insert Parent task
+function insertParentTask (parentTask) {
+    return new Promise((resolve, reject)=> { 
+       console.log(parentTask)    
+
+       getmaxParentTaskId().then((maxParentTaskId)=> {
+       if (!maxParentTaskId) {
+         maxParentTaskId = 0
+       }
+       parentTask.parentId = parseInt(maxParentTaskId) + 1
+        db = getDb()
+        db.collection("parentTasks").insertOne(parentTask, function(err, res) {
+        if (err) { 
+          reject (err)
+        }
+       console.log("Parent task inserted: " +  JSON.stringify(parentTask));
+       resolve({parentId:  parentTask.parentId }) 
+       })    
+      })  
+  })
+}
+
+//get parent task for id
+function getParentTasks (id) {
+  return new Promise((resolve, reject)=> {
+  db = getDb()
+  if (id) {
+    queryString = {parentId: parseInt(id)}
+  } else {
+     queryString = {}
+  }
+  db.collection("parentTasks").find(queryString).toArray(function(err, parentTasks) {
+    if (err) { 
+      reject (err)
+    }
+  console.log("Found the following parent tasks");
+  console.log(parentTasks)
+
+  resolve(parentTasks);
+  });
+ })
+}
+
+
+//get maximum task id
+function getmaxTaskId() { 
+     return new Promise((resolve, reject)=> { 
+     db = getDb() 
+       db.collection("tasks").find({}).sort({ "Id": -1 }).limit(1).toArray(function(err, max) {
+          if (err) {
+            reject (err)
+          }
+          
+          if (0 < max.length) {
+             resolve(max[0].Id)
+          } else {
+             resolve (0)
+          }
+       })   
+     })     
+    }
+	
+//insert task
+function insertTask (task) {
+    return new Promise((resolve, reject)=> { 
+       console.log(task)    
+
+       getmaxTaskId().then((maxTaskId)=> {
+       if (!maxTaskId) {
+         maxTaskId = 0
+       }
+       task.taskId = parseInt(maxTaskId) + 1
+        db = getDb()
+        db.collection("tasks").insertOne(task, function(err, res) {
+        if (err) { 
+          reject (err)
+        }
+       console.log(" task inserted: " +  JSON.stringify(task));
+       resolve({taskId: task.taskId }) 
+       })    
+      })  
+  })
+}
+
+//get all tasks
+function getTasks (id) {
+  return new Promise((resolve, reject)=> {
+  db = getDb()
+  if (id) {
+    queryString = {taskId: parseInt(id)}
+  } else {
+     queryString = {}
+  }
+  db.collection("tasks").find(queryString).toArray(function(err, tasks) {
+    if (err) { 
+      reject (err)
+    }
+  console.log("Found the following  tasks");
+  console.log(tasks)
+  resolve(tasks);
+  });
+ })
+}
+
 module.exports = {
     getDb,
     initDb,
@@ -172,4 +334,11 @@ module.exports = {
     deleteUser,
     insertProject,
     getProjects,
+    updateProject,
+    deleteProject,
+    insertParentTask,
+    getParentTasks,
+    getTasks,
+    insertTask
+
 };

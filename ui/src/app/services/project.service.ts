@@ -39,10 +39,10 @@ export class ProjectService {
           .catch(err => err);
     }
 
-    updateProject(project: string, id : number): Promise<any> {
+    updateProject(project): Promise<any> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        return this.http.put(`${this.server}`, project, options)
+        return this.http.put(this.server, project, options)
             .toPromise()
             .then(response => {
                 return response.json();

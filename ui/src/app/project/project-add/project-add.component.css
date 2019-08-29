@@ -1,10 +1,16 @@
-.container {
-  width: 1200px;
-  margin: auto;
-  border: 3px;
-  }
-
-
 button {
     width: 100px;
+}
+
+.bigbtns {
+    height: 100px;
+}
+
+hr {
+  border: 0;
+  clear:both;
+  display:block;
+  width: 96%;               
+  background-color:grey;
+  height: 1px;
 }

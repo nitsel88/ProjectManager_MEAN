@@ -28,7 +28,7 @@ export class TaskAddComponent implements OnInit {
   user : any = {}
   parents : Array<any> = [];
   parent : any = {}
-  isReadOnly : boolean = true;
+  isParentProj : boolean = false;
   id : number
   btnType : string = ""
   constructor(private parentService : ParentTaskService, private taskService : TaskService, 
@@ -38,7 +38,7 @@ export class TaskAddComponent implements OnInit {
     this.myForm = new FormGroup({
       'taskGroup': new FormGroup({
           'project': new FormControl('', Validators.required),
-          'taskName': new FormControl('', [Validators.required], []),
+          'taskName': new FormControl('', Validators.required),
           'priority': new FormControl('', Validators.required),
           'parentTask': new FormControl('', Validators.required),
           'startDate': new FormControl('', Validators.required),
@@ -90,21 +90,20 @@ export class TaskAddComponent implements OnInit {
   }
 
   handleChange(value: boolean) {
-    console.log('value '+value);
     if(value) {
         this.myForm.controls['taskGroup']['controls'].project.disable();
-        this.myForm.controls['taskGroup']['controls'].taskName.disable();
+        this.myForm.controls['taskGroup']['controls'].taskName.enable();
         this.myForm.controls['taskGroup']['controls'].priority.disable();
         this.myForm.controls['taskGroup']['controls'].startDate.disable();
         this.myForm.controls['taskGroup']['controls'].endDate.disable();
-        this.isReadOnly = false;
+        this.isParentProj = true;
     } else {
         this.myForm.controls['taskGroup']['controls'].project.enable();
         this.myForm.controls['taskGroup']['controls'].taskName.enable();
         this.myForm.controls['taskGroup']['controls'].priority.enable();
         this.myForm.controls['taskGroup']['controls'].startDate.enable();
         this.myForm.controls['taskGroup']['controls'].endDate.enable();
-        this.isReadOnly = true;
+        this.isParentProj = false;
     }
   }
   resetForm() {
@@ -123,7 +122,7 @@ export class TaskAddComponent implements OnInit {
     this.projectService.getProject(projectId)
     .then((res) => {
       console.log(res);
-      this.project = res;
+      this.project = res[0];
     })
     this.closeProjectModal.nativeElement.click();
   }
@@ -132,7 +131,7 @@ export class TaskAddComponent implements OnInit {
     this.projectService.getProject(projectId)
     .then((res) => {
       console.log(res);
-      this.project = res;
+      this.project = res[0];
     })
   }
 
@@ -148,7 +147,7 @@ export class TaskAddComponent implements OnInit {
     this.userService.getUser(userId)
     .then((res) => {
       console.log(res);
-      this.user = res;
+      this.user = res[0];
     })
     this.closeUserModal.nativeElement.click();
   }
@@ -157,7 +156,7 @@ export class TaskAddComponent implements OnInit {
     this.userService.getUser(userId)
     .then((res) => {
       console.log(res);
-      this.user = res;
+      this.user = res[0];
     })
   }
 
@@ -173,7 +172,7 @@ export class TaskAddComponent implements OnInit {
     this.parentService.getParentTask(parentId)
     .then((res) => {
       console.log(res);
-      this.parent = res;
+      this.parent = res[0];
     })
     this.closeParentModal.nativeElement.click();
   }
@@ -182,14 +181,30 @@ export class TaskAddComponent implements OnInit {
     this.parentService.getParentTask(parentId)
     .then((res) => {
       console.log(res);
-      this.parent = res;
+      this.parent = res[0];
     })
   }
 
   onSubmit() {
-    let dateCheck = this.validateDate(this.myForm.value.taskGroup.startDate, this.myForm.value.taskGroup.endDate);
-    if(!dateCheck) {
-      if(this.isReadOnly) {
+    let validDateRange = this.validDateRange(this.myForm.value.taskGroup.startDate, this.myForm.value.taskGroup.endDate);
+    if(validDateRange) {
+      if(this.isParentProj) {
+        this.task = {"parentTask":this.myForm.value.taskGroup.taskName}
+        this.parentService.addTask(this.task)
+          .then(res => {
+              console.log(res);
+              if (res.parentId > 0) {
+                this.status = "Parent Task Added !!"
+                this.myForm.reset();
+              }
+          }, err => {
+              console.log('server err');
+              console.log(err);
+          }).catch(err => {
+              console.log('client err');
+              console.log(err);
+          })
+      } else {
         this.task = {"taskName":this.myForm.value.taskGroup.taskName,
         "startDate":this.myForm.value.taskGroup.startDate,
         "endDate":this.myForm.value.taskGroup.endDate,
@@ -199,11 +214,11 @@ export class TaskAddComponent implements OnInit {
         "projectId":this.project.projectId,
         "userId":this.user.userId}
         if(this.id > 0) {
-          this.taskService.updateTask(JSON.stringify(this.task), this.id)
-            .then(res => {
+          this.taskService.updateTask(this.task)
+          .then(res => {
                 console.log(res);
                 if (res.taskId > 0) {
-                  this.status = "Task Updated Successfully!"
+                  this.status = "Task Updated !!"
                   this.myForm.reset();
                 }
             }, err => {
@@ -215,11 +230,11 @@ export class TaskAddComponent implements OnInit {
                 console.log(err);
             })
         } else {
-            this.taskService.addTask(JSON.stringify(this.task))
+            this.taskService.addTask(this.task)
             .then(res => {
                 console.log(res);
                 if (res.taskId > 0) {
-                  this.status = "Task Added Successfully!"
+                  this.status = "Task Added !!"
                   this.myForm.reset();
                 }
             }, err => {
@@ -231,35 +246,18 @@ export class TaskAddComponent implements OnInit {
                 console.log(err);
             })
         }
-      } else {
-        this.task = {"parentTask":this.myForm.value.taskGroup.parentTask}
-        this.parentService.addTask(JSON.stringify(this.task))
-          .then(res => {
-              console.log(res);
-              if (res.parentId > 0) {
-                this.status = "Parent Task Added Successfully!"
-                this.myForm.reset();
-              }
-          }, err => {
-              console.log('server err');
-              console.log(err);
-          })
-          .catch(err => {
-              console.log('client err');
-              console.log(err);
-          })
       }
     } else {
       this.error = "Task End Date should be greater than Start Date!"
     }
   }
-  validateDate(startDate, endDate) {
-    var fDate = new Date(startDate);
-    var lDate = new Date(endDate);
-    if(lDate <= fDate) {
-        return true;
-    } else {
+  validDateRange(startDate, endDate) {
+    var sDate = new Date(startDate);
+    var eDate = new Date(endDate);
+    if(eDate <= sDate) {        
         return false;
+    } else {
+        return true;
     }
   }
 }

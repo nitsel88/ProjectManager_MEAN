@@ -1,12 +1,17 @@
-var users = require('./users')
-var projects = require('./projects')
-const dbObj = require('./database')
+//node modules
 var express = require('express')
 var app = express()
 
-//port
+//custom modules
+const dbObj = require('./database')
+var users = require('./users')
+var projects = require('./projects')
+var parentTasks =  require('./parentTasks')
+var tasks =  require('./tasks')
+//port config
 const port = 3001;
 
+//request config
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 app.use(function(req, res, next) {
@@ -20,6 +25,8 @@ app.use(function(req, res, next) {
 //routing
 app.use("/user", users);
 app.use("/project", projects);
+app.use("/parentask", parentTasks);
+app.use("/task", tasks);
 
 try {
 //initializing DB and start listening to port
