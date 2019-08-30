@@ -118,7 +118,7 @@ function getMaxProjId() {
             reject (err)
           }
           
-          if (0 < maxproj.length) {
+          if (0 < maxproj.length) { 
              resolve(maxproj[0].projectId)
           } else {
              resolve (0)
@@ -156,27 +156,30 @@ function getProjects (id) {
   } else {
      queryString = {}
   }
-  db.collection("projects").find(queryString).toArray((err, projects)=>{
+
+  db.collection("projects").aggregate([
+    { $match: queryString},
+    { $lookup:{
+         from: 'tasks',
+         localField: 'projectId',
+         foreignField: 'projectId',
+         as: 'tasks'
+       }
+     },
+       { $lookup:{
+         from: 'parentTasks',
+         localField: 'tasks.parentId',
+         foreignField: 'parentId',
+         as: 'parentTasks'
+       }
+     }
+    ]).toArray((err, projects)=>{
     if (err) { 
       reject (err)
     }
   console.log("Found the following projects");
   console.log(projects)
-  if (id) {
-    db.collection("tasks").find({projectId: parseInt(id)}).toArray((err, tasks)=> {
-       if (err) {
-         reject (err)
-       }
-       console.log("Found the following tasks for project id: " + id);
-       console.log(tasks)
-       projects[0].tasks = tasks
-       console.log(JSON.stringify(projects))
-       
-       resolve(projects)
-    })
-  } else {
-    resolve(projects)
-  }  
+  resolve(projects)
   });
  })
 }
@@ -282,13 +285,13 @@ function getParentTasks (id) {
 function getmaxTaskId() { 
      return new Promise((resolve, reject)=> { 
      db = getDb() 
-       db.collection("tasks").find({}).sort({ "Id": -1 }).limit(1).toArray(function(err, max) {
+       db.collection("tasks").find({}).sort({ "taskId": -1 }).limit(1).toArray(function(err, max) {
           if (err) {
             reject (err)
           }
           
           if (0 < max.length) {
-             resolve(max[0].Id)
+             resolve(max[0].taskId)
           } else {
              resolve (0)
           }
@@ -331,13 +334,32 @@ function getTasks (id) {
     if (err) { 
       reject (err)
     }
-  console.log("Found the following  tasks");
+  console.log("Found the following tasks");
   console.log(tasks)
   resolve(tasks);
   });
  })
 }
 
+//update project
+function updateTask (task) {
+    return new Promise((resolve, reject)=> {
+    db = getDb()
+
+    console.log("update request received:"+ JSON.stringify(task))
+    let _id = task._id;
+    delete task._id;     
+    db.collection("tasks").updateOne({"_id": ObjectID(_id)}, {$set: task}).then(result => {
+      const { matchedCount, modifiedCount } = result;
+      if(matchedCount && modifiedCount) {
+          console.log("task updated: " + task.taskId);
+          resolve({taskId: task.taskId })
+       } 
+     }).catch(err => {
+         reject (err)
+     })
+  })
+}
 module.exports = {
     getDb,
     initDb,
@@ -352,6 +374,6 @@ module.exports = {
     insertParentTask,
     getParentTasks,
     getTasks,
-    insertTask
-
+    insertTask,
+    updateTask
 };

@@ -48,6 +48,11 @@ export class TaskViewComponent implements OnInit {
     .then((res) => {
       console.log(res);
       this.project = res[0];
+      this.project.tasks.forEach((task, idx)=> {
+           this.project.tasks[idx].parentTask = this.project.parentTasks.find((parentTask) => { return parentTask.parentId === this.project.tasks[idx].parentId })
+      })
+      delete this.project.parentTasks
+      console.log(JSON.stringify(this.project))
     })
     this.closeModal.nativeElement.click();
   }
@@ -57,11 +62,12 @@ export class TaskViewComponent implements OnInit {
   }
 
   endTask(id) {
-    for(let val in this.project.tasks) {
-      if(this.project.tasks[val].taskId == id) {
-        this.project.tasks[val].endDate = formatDate(new Date(), 'yyyy-MM-dd', 'en');
-        this.project.tasks[val].status = "Completed";
-        this.taskService.updateTask(this.project.tasks[val])
+        let currentTask = this.project.tasks.find((task) => { return task.taskId === id })
+        currentTask.endDate = formatDate(new Date(), 'yyyy-MM-dd', 'en')
+        currentTask.status = "Completed"
+        var tmpTask = JSON.parse(JSON.stringify(currentTask))
+        delete tmpTask.parentTask
+        this.taskService.updateTask(tmpTask)
         .then(res => {
             console.log(res);
             if (res.taskId > 0) {
@@ -75,7 +81,5 @@ export class TaskViewComponent implements OnInit {
             console.log('client err');
             console.log(err);
         })
-      }
-    }
   }
 }

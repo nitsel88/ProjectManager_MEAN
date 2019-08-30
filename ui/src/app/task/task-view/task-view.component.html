@@ -14,19 +14,17 @@
     </div>
 </div>
 <hr/>
-<div class="container">
-  <span class="h4 text-danger">{{status}}</span>
-</div>
+  <span class="h5 text-success">{{status}}</span>
 <div class="row table-responsive">
     <table class="table">
-        <tbody *ngFor="let task of project.tasks | tasksortfilter : property">
-            <tr>
+           <tr [hidden]="!project.tasks">
                 <th scope="col">Task</th>
                 <th scope="col">Parent</th>
                 <th scope="col">Priority</th>
                 <th scope="col">Start</th>
                 <th scope="col">End</th>
-              </tr>
+           </tr>
+        <tbody *ngFor="let task of project.tasks | tasksortfilter : property">
             <tr>
                 <td>
                     <div class="card text-white bg-secondary mb-3">
@@ -45,9 +43,9 @@
                 <td>{{task.priority}}</td>
                 <td>{{task.startDate}}</td>
                 <td>{{task.endDate}}</td>
-                <td><button type="button" [disabled]="isEnded(task.endDate)" class="btn btn-primary" routerLink="/addTask/{{task.taskId}}">Edit
+                <td><button type="button" [disabled]="isEnded(task.endDate)" class="btn btn-primary modbtns" routerLink="/addTask/{{task.taskId}}">Edit
                   </button></td>
-                <td><button type="button" [disabled]="isEnded(task.endDate)" class="btn btn-danger" (click)="endTask(task.taskId)">End Task
+                <td><button type="button" [disabled]="isEnded(task.endDate)" class="btn btn-danger modbtns" (click)="endTask(task.taskId)">End Task
                   </button></td>
             </tr>
         </tbody>

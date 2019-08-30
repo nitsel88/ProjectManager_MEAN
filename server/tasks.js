@@ -24,6 +24,17 @@ router.get('/:id', (req, res) => {
    })
 })
 
+//update task task
+router.put('/', (req, res) => {   
+   dbObj.updateTask(req.body).then((dbres) => {
+       console.log(dbres)
+       res.json(dbres)
+   }).catch ((err) => {
+       console.log(err)
+       errobj = {errcode: 500, error: err}
+       res.json(errobj)
+   })
+})
 
 //Create new task
 router.post('/', (req, res) => {   

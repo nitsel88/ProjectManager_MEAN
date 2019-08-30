@@ -41,14 +41,14 @@ export class ProjectAddComponent implements OnInit {
 
   this.route.params.subscribe(params => {
     let empId = +params['id'];
-    if(+empId > 0){
+    if(+empId > 0) {
         this.id = +empId;
         this.populateProject(this.id);
         this.btnType = "Update";
     } else {
         this.btnType = "Add";
     }
-  })
+   })
   }
   
   populateProject(projectId) {

@@ -13,7 +13,6 @@ import { TaskService } from './services/task.service';
 import { ParentTaskService } from './services/parenttask.service';
 import { ProjectService } from './services/project.service';
 import { UserService } from './services/user.service';
-import { TaskPipe } from './pipes/task.pipe';
 import { ProjectPipe } from './pipes/project.pipe';
 import { UserPipe } from './pipes/user.pipe';
 import { UserSortPipe } from './pipes/usersort.pipe';
@@ -40,7 +39,6 @@ const routes : Routes = [
     UserAddComponent,
     ProjectPipe,
     UserPipe,
-    TaskPipe,
     UserSortPipe,
     ProjectSortPipe,
     TaskSortPipe
@@ -56,7 +54,6 @@ const routes : Routes = [
   providers: [
     ProjectPipe,
     UserPipe,
-    TaskPipe,
     UserSortPipe,
     ProjectSortPipe,
     TaskSortPipe,

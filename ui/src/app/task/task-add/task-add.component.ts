@@ -51,22 +51,27 @@ export class TaskAddComponent implements OnInit {
   this.myForm.controls['taskGroup']['controls'].startDate.setValue(this.currentDate());
   this.myForm.controls['taskGroup']['controls'].endDate.setValue(this.endDate());
   this.myForm.statusChanges.subscribe((enableParent:any) => console.log(enableParent));
-  const id = +this.route.snapshot.paramMap.get('id');
-    console.log(id);
+
+   this.route.params.subscribe(params => {
+    let id = +params['id'];
+        console.log(id);
     if(+id > 0){
         this.id = +id;
         this.getTask(this.id);
         this.btnType = "Update";
+        this.myForm.controls['taskGroup']['controls'].parentCheck.disable();
     } else {
         this.btnType = "Add";
     }
+  })
+
   }
 
   getTask(taskId) {
     this.taskService.getTask(taskId)
     .then((res) => {
       console.log(res);
-      this.task = res;
+      this.task = res[0];
       this.myForm.controls['taskGroup']['controls'].taskName.setValue(this.task["taskName"]);
       this.myForm.controls['taskGroup']['controls'].priority.setValue(this.task["priority"]);
       this.myForm.controls['taskGroup']['controls'].startDate.setValue(this.task["startDate"]);
@@ -108,6 +113,7 @@ export class TaskAddComponent implements OnInit {
   }
   resetForm() {
     this.myForm.reset();
+    this.btnType = "Add";
   }
 
   getProjects() {
@@ -212,7 +218,7 @@ export class TaskAddComponent implements OnInit {
         "status":"In Progress",
         "parentId":this.parent.parentId,
         "projectId":this.project.projectId,
-        "userId":this.user.userId}
+        "userId":this.user.empId}
         if(this.id > 0) {
           this.taskService.updateTask(this.task)
           .then(res => {
