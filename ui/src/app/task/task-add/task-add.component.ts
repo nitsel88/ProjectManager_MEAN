@@ -210,16 +210,15 @@ export class TaskAddComponent implements OnInit {
               console.log('client err');
               console.log(err);
           })
-      } else {
-        this.task = {"taskName":this.myForm.value.taskGroup.taskName,
-        "startDate":this.myForm.value.taskGroup.startDate,
-        "endDate":this.myForm.value.taskGroup.endDate,
-        "priority":this.myForm.value.taskGroup.priority, 
-        "status":"In Progress",
-        "parentId":this.parent.parentId,
-        "projectId":this.project.projectId,
-        "userId":this.user.empId}
+      } else { 
         if(this.id > 0) {
+          this.task["taskName"] = this.myForm.value.taskGroup.taskName
+	        this.task["startDate"] = this.myForm.value.taskGroup.startDate
+	        this.task["endDate"] = this.myForm.value.taskGroup.endDate
+          this.task["priority"] = this.myForm.value.taskGroup.priority
+          this.task["parentId"] = this.parent.parentId
+		      this.task["projectId"] = this.project.projectId
+		      this.task["userId"] = this.user.empId
           this.taskService.updateTask(this.task)
           .then(res => {
                 console.log(res);
@@ -236,6 +235,14 @@ export class TaskAddComponent implements OnInit {
                 console.log(err);
             })
         } else {
+                 this.task = {"taskName":this.myForm.value.taskGroup.taskName,
+                  "startDate":this.myForm.value.taskGroup.startDate,
+                  "endDate":this.myForm.value.taskGroup.endDate,
+                   "priority":this.myForm.value.taskGroup.priority, 
+                   "status":"In Progress",
+                   "parentId":this.parent.parentId,
+                    "projectId":this.project.projectId,
+                     "userId":this.user.empId}
             this.taskService.addTask(this.task)
             .then(res => {
                 console.log(res);

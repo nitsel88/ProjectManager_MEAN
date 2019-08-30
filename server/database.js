@@ -179,6 +179,7 @@ function getProjects (id) {
     }
   console.log("Found the following projects");
   console.log(projects)
+  
   resolve(projects)
   });
  })
@@ -341,6 +342,12 @@ function getTasks (id) {
  })
 }
 
+//get Completed tasks for a project
+async function getCompletedTasksForProj(projectId) {
+  db = getDb()
+  queryString = { projectId: parseInt(projectId), status: "complete"}
+  return db.collection("tasks").find(queryString).count()
+}
 //update project
 function updateTask (task) {
     return new Promise((resolve, reject)=> {
