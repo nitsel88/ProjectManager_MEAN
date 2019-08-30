@@ -70,6 +70,9 @@ export class ProjectAddComponent implements OnInit {
     .then((res) => {
       console.log(res);
       this.projects = res;
+      this.projects.forEach((proj, idx)=>{
+        this.projects[idx].compTasks = proj.tasks.filter((task)=>{ return task.status == "Completed" }).length
+      })
     })
   }
   currentDate() {
