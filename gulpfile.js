@@ -33,7 +33,7 @@ function installUIDep(cb) {
 
 function buildUI(cb) {
  
-    let bldUI = exec('cd ./ui && ng build')
+    let bldUI = exec('cd ./ui && npm run ng -- build')
     bldUI.stdout.on('data', function(data) {
         console.log(data)
     });
