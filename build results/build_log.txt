@@ -1,0 +1,80 @@
+Started by user admin
+Running as SYSTEM
+Building in workspace C:\Program Files (x86)\Jenkins\workspace\projectManager_build
+No credentials specified
+ > git.exe rev-parse --is-inside-work-tree # timeout=10
+Fetching changes from the remote Git repository
+ > git.exe config remote.origin.url https://github.com/nitsel88/finalSBA.git # timeout=10
+Fetching upstream changes from https://github.com/nitsel88/finalSBA.git
+ > git.exe --version # timeout=10
+ > git.exe fetch --tags --progress https://github.com/nitsel88/finalSBA.git +refs/heads/*:refs/remotes/origin/*
+ > git.exe rev-parse "refs/remotes/origin/master^{commit}" # timeout=10
+ > git.exe rev-parse "refs/remotes/origin/origin/master^{commit}" # timeout=10
+Checking out Revision cb74a711ed660a79e6367c6e80e6ca57fd6af938 (refs/remotes/origin/master)
+ > git.exe config core.sparsecheckout # timeout=10
+ > git.exe checkout -f cb74a711ed660a79e6367c6e80e6ca57fd6af938
+Commit message: "testing jenkins break mail with a error commit"
+ > git.exe rev-list --no-walk cb74a711ed660a79e6367c6e80e6ca57fd6af938 # timeout=10
+[projectManager_build] $ cmd /c call C:\WINDOWS\TEMP\jenkins7133927456018212740.bat
+
+C:\Program Files (x86)\Jenkins\workspace\projectManager_build>npm install 
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.2.9 (node_modules\fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@1.2.9: wanted {"os":"darwin","arch":"any"} (current: {"os":"win32","arch":"x64"})
+
+audited 6490 packages in 2.695s
+found 0 vulnerabilities
+
+[projectManager_build] $ cmd /c call C:\WINDOWS\TEMP\jenkins3735433121040633538.bat
+
+C:\Program Files (x86)\Jenkins\workspace\projectManager_build>node node_modules\gulp\bin\gulp.js depinstall 
+[[90m17:38:28[39m] Using gulpfile C:\Program Files (x86)\Jenkins\workspace\projectManager_build\gulpfile.js
+[[90m17:38:28[39m] Starting 'depinstall'...
+[[90m17:38:28[39m] Starting 'installServerDep'...
+[[90m17:38:28[39m] Starting 'installUIDep'...
+audited 2432 packages in 3.171s
+
+found 0 vulnerabilities
+
+
+---------------------Server Dependencies Installation Complete with code: 0--------------------
+[[90m17:38:33[39m] Finished 'installServerDep' after 4.46 s
+audited 38836 packages in 5.562s
+
+found 20 vulnerabilities (12 low, 8 high)
+  run `npm audit fix` to fix them, or `npm audit` for details
+
+---------------------UI Dependencies Installation complete with code 0--------------------
+[[90m17:38:35[39m] Finished 'installUIDep' after 6.85 s
+[[90m17:38:35[39m] Finished 'depinstall' after 6.86 s
+
+C:\Program Files (x86)\Jenkins\workspace\projectManager_build>exit 0 
+[projectManager_build] $ cmd /c call C:\WINDOWS\TEMP\jenkins6160044661632706387.bat
+
+C:\Program Files (x86)\Jenkins\workspace\projectManager_build>node node_modules\gulp\bin\gulp.js build 
+[[90m17:38:36[39m] Using gulpfile C:\Program Files (x86)\Jenkins\workspace\projectManager_build\gulpfile.js
+[[90m17:38:36[39m] Starting 'build'...
+[[90m17:38:36[39m] Starting 'buildUI'...
+
+> project-manager@0.0.0 ng C:\Program Files (x86)\Jenkins\workspace\projectManager_build\ui
+> ng "build"
+
+
+
+Date: 2019-09-01T12:08:46.891Z
+Hash: 8d2c3f0ca1f5d1171f7d
+Time: 6284ms
+chunk {main} main.js, main.js.map (main) 107 kB [initial] [rendered]
+chunk {polyfills} polyfills.js, polyfills.js.map (polyfills) 241 kB [initial] [rendered]
+chunk {runtime} runtime.js, runtime.js.map (runtime) 5.22 kB [entry] [rendered]
+chunk {styles} styles.js, styles.js.map (styles) 15.6 kB [initial] [rendered]
+chunk {vendor} vendor.js, vendor.js.map (vendor) 3.76 MB [initial] [rendered]
+
+---------------------UI build complete with code 0--------------------
+[[90m17:38:46[39m] Finished 'buildUI' after 11 s
+[[90m17:38:46[39m] Starting 'copyUItoServerPath'...
+------------------Built files copied to public folder------------------------
+[[90m17:38:47[39m] Finished 'copyUItoServerPath' after 65 ms
+[[90m17:38:47[39m] Finished 'build' after 11 s
+
+C:\Program Files (x86)\Jenkins\workspace\projectManager_build>exit 0 
+Finished: SUCCESS
