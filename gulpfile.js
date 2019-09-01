@@ -37,6 +37,10 @@ function buildUI(cb) {
     bldUI.stdout.on('data', function(data) {
         console.log(data)
     });
+    
+    bldUI.stderr.on('data', function(data) {
+        console.log(data)
+    });
 
     bldUI.on('close', function(code) {
         console.log(`---------------------UI build complete with code ${code}--------------------`) 
