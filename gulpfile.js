@@ -13,7 +13,7 @@ function installServerDep(cb) {
 
     instServDep.on('close', function(code) {
         console.log(`---------------------Server Dependencies Installation Complete with code: ${code}--------------------`)
-        cb()
+        cb(code)
     });   
 }
 
@@ -27,7 +27,7 @@ function installUIDep(cb) {
 
     instUIDep.on('close', function(code) {
         console.log(`---------------------UI Dependencies Installation complete with code ${code}--------------------`)
-        cb()
+        cb(code)
     });
 }
 
@@ -44,7 +44,7 @@ function buildUI(cb) {
 
     bldUI.on('close', function(code) {
         console.log(`---------------------UI build complete with code ${code}--------------------`) 
-        cb()
+        cb(code)
     })
    
 }
