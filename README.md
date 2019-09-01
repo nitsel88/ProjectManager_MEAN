@@ -12,6 +12,8 @@ Run `npm install gulp-cli -g && npm install gulp`
 Run `gulp` to install dependecies, build and start the server at port 3001
 (Prerequisite: mongodb to be installed and mongoserver serving at port : 27017)
 
+or run them manually step by step as below,
+
 ## Install dependencies
 Run `gulp depinstall` to install dependecies
 
