@@ -1,0 +1,22 @@
+{
+  "name": "finalsba",
+  "version": "1.0.0",
+  "description": "Project manager with UI and Server",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nitsel88/finalSBA.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nitsel88/finalSBA/issues"
+  },
+  "homepage": "https://github.com/nitsel88/finalSBA#readme",
+  "dependencies": {
+    "gulp": "^4.0.2"
+  }
+}

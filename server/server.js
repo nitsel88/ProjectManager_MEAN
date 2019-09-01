@@ -14,6 +14,7 @@ const port = 3001;
 //request config
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
+app.use(express.static('public'))   
 app.use(function(req, res, next) {
     res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
     res.header("Access-Control-Allow-Origin", req.headers.origin);
@@ -27,7 +28,9 @@ app.use("/user", users);
 app.use("/project", projects);
 app.use("/parentask", parentTasks);
 app.use("/task", tasks);
-
+app.get('/*', (req, res) => {
+    res.sendFile(__dirname + '/public/index.html');
+  })
 try {
 //initializing DB and start listening to port
 dbObj.initDb(() => {
