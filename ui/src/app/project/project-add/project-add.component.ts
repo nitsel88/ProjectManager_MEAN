@@ -46,7 +46,7 @@ export class ProjectAddComponent implements OnInit {
         this.populateProject(this.id);
         this.btnType = "Update";
     } else {
-        this.btnType = "Add";
+        this.btnTyp = "Add";
     }
    })
   }
