@@ -20,8 +20,5 @@ Run `gulp depinstall` to install dependecies
 ## Start build
 Run `gulp build` to build the project
 
-## Build and Start server
-Run `gulp buildstart` to build UI and start server
-
 ## Start server
 Run `gulp start` to start server
