@@ -38,7 +38,7 @@ dbObj.initDb(() => {
         if (err) {
             throw err; //
         }
-        console.log("API Up and running on port: " + port);
+        console.log("Server is up and running on port: " + port);
     });
 });
     
