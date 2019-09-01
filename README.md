@@ -1,4 +1,4 @@
-# ProjectManagerUi APP
+# ProjectManager APP
 
 ## Steps to Install and run app
 ## Clone project
